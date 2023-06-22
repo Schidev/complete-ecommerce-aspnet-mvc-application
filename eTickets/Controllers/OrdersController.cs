@@ -2,6 +2,7 @@
 using eTickets.Data.Services;
 using eTickets.Data.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 
 namespace eTickets.Controllers
 {
@@ -12,9 +13,17 @@ namespace eTickets.Controllers
         private readonly IOrdersService _ordersService;
         public OrdersController(IMoviesService moviesService, ShoppingCart shoppingCart, IOrdersService ordersService)
         {
-           this._moviesService = moviesService;
+            this._moviesService = moviesService;
             this._shoppingCart = shoppingCart;
             this._ordersService = ordersService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            string userId = "";
+
+            var orders = await _ordersService.GetOrdersByUserIdAsync(userId);
+            return View(orders);
         }
 
         public IActionResult ShoppingCart()
@@ -35,7 +44,7 @@ namespace eTickets.Controllers
         {
             var item = await _moviesService.GetMovieByIdAsync(id);
 
-            if (item != null) 
+            if (item != null)
             {
                 _shoppingCart.AddItemToCart(item);
             }
@@ -62,6 +71,7 @@ namespace eTickets.Controllers
 
             await _ordersService.StoreOrderAsync(items, userId, userEmailAddress);
             await _shoppingCart.ClearShoppingCartAsync();
+
             return View("OrderCompleted");
         }
 

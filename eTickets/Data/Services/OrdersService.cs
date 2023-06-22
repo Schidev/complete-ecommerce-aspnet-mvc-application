@@ -8,7 +8,7 @@ namespace eTickets.Data.Services
         private readonly AppDbContext _context;
         public OrdersService(AppDbContext context)
         {
-            this._context = context;
+            _context = context;
         }
 
         public async Task<List<Order>> GetOrdersByUserIdAsync(string userId)
@@ -20,7 +20,7 @@ namespace eTickets.Data.Services
         public async Task StoreOrderAsync(List<ShoppingCartItem> items, string userId, string userEmailAddress)
         {
             var order = new Order()
-            { 
+            {
                 UserId = userId,
                 Email = userEmailAddress
             };

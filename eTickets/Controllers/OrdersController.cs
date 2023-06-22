@@ -5,17 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eTickets.Controllers
 {
-    public class OrderController : Controller
+    public class OrdersController : Controller
     {
         private readonly IMoviesService _moviesService;
         private readonly ShoppingCart _shoppingCart;
-        public OrderController(IMoviesService moviesService, ShoppingCart shoppingCart)
+        public OrdersController(IMoviesService moviesService, ShoppingCart shoppingCart)
         {
            this._moviesService = moviesService;
             this._shoppingCart = shoppingCart;
         }
 
-        public IActionResult Index()
+        public IActionResult ShoppingCart()
         {
             var items = _shoppingCart.GetShoppingCartItems();
 
@@ -27,6 +27,18 @@ namespace eTickets.Controllers
             };
 
             return View(response);
+        }
+
+        public async Task<RedirectToActionResult> AddItemToShoppingCart(int id)
+        {
+            var item = await _moviesService.GetMovieByIdAsync(id);
+
+            if (item != null) 
+            {
+                _shoppingCart.AddItemToCart(item);
+            }
+
+            return RedirectToAction(nameof(ShoppingCart));
         }
     }
 }

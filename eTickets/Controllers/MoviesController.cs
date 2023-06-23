@@ -33,7 +33,10 @@ namespace eTickets.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                var filteredresult = allMovies.Where(n => n.Name.Contains(searchString) || n.Description.Contains(searchString));
+                var filteredresult = allMovies.Where(n => string.Equals(n.Name, searchString, StringComparison.CurrentCultureIgnoreCase) || 
+                string.Equals(n.Description, searchString, StringComparison.CurrentCultureIgnoreCase));
+
+
                 return View("Index", filteredresult);
             }
 
